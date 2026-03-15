@@ -17,6 +17,8 @@ import { db } from "@/lib/firebase/client";
 import { Transaction, TransactionType, TransactionItem, PaymentMethod } from "@/types";
 import { toDateSafe, getDateKey } from "@/utils/date";
 import { generateReceiptNumber } from "@/utils/receipt";
+import { useAuth } from "@/hooks/useAuth";
+import { SAMPLE_TRANSACTIONS } from "@/lib/sampleData";
 
 function docToTransaction(id: string, data: Record<string, unknown>): Transaction {
   return {
@@ -40,10 +42,17 @@ function docToTransaction(id: string, data: Record<string, unknown>): Transactio
 }
 
 export function useTransactions() {
+  const { isGuest } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isGuest) {
+      setTransactions(SAMPLE_TRANSACTIONS);
+      setLoading(false);
+      return;
+    }
+
     const q = query(collection(db, "transactions"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const results = snapshot.docs.map((d) =>
@@ -53,18 +62,19 @@ export function useTransactions() {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [isGuest]);
 
   const getNextReceiptNumber = async (type: TransactionType): Promise<string> => {
     const now = new Date();
+    if (isGuest) {
+      const todayTx = transactions.filter((tx) => tx.type === type && getDateKey(tx.createdAt) === getDateKey(now));
+      return generateReceiptNumber(type, now, todayTx.length + 1);
+    }
     const dateKey = getDateKey(now);
     const counterRef = doc(db, "counters", "receipts", dateKey, type);
-
     const snap = await getDoc(counterRef);
     const currentCount = snap.exists() ? (snap.data().count as number) : 0;
-    const nextCount = currentCount + 1;
-
-    return generateReceiptNumber(type, now, nextCount);
+    return generateReceiptNumber(type, now, currentCount + 1);
   };
 
   const createSaleTransaction = async (params: {
@@ -79,6 +89,22 @@ export function useTransactions() {
     staffName: string;
     note: string;
   }): Promise<string> => {
+    if (isGuest) {
+      const id = `t${Date.now()}`;
+      const receiptNumber = await getNextReceiptNumber("sale");
+      const newTx: Transaction = {
+        id,
+        type: "sale",
+        ...params,
+        subtotal: params.total,
+        receiptNumber,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      setTransactions((prev) => [newTx, ...prev]);
+      return id;
+    }
+
     const now = new Date();
     const dateKey = getDateKey(now);
     const receiptNumber = await getNextReceiptNumber("sale");
@@ -95,7 +121,6 @@ export function useTransactions() {
       updatedAt: serverTimestamp(),
     });
 
-    // Update item statuses to sold
     for (const item of params.items) {
       const itemRef = doc(db, "items", item.itemId);
       batch.update(itemRef, {
@@ -104,7 +129,6 @@ export function useTransactions() {
       });
     }
 
-    // Update customer stats if customer exists
     if (params.customerId) {
       const customerRef = doc(db, "customers", params.customerId);
       batch.update(customerRef, {
@@ -114,7 +138,6 @@ export function useTransactions() {
       });
     }
 
-    // Increment receipt counter
     const counterRef = doc(db, "counters", "receipts", dateKey, "sale");
     await setDoc(counterRef, { count: increment(1) }, { merge: true });
 
@@ -143,6 +166,37 @@ export function useTransactions() {
       sellingPrice: number;
     }>;
   }): Promise<string> => {
+    if (isGuest) {
+      const id = `t${Date.now()}`;
+      const receiptNumber = await getNextReceiptNumber("purchase");
+      const txItems: TransactionItem[] = params.itemsData.map((d, idx) => ({
+        itemId: `i${Date.now()}-${idx}`,
+        itemName: d.name,
+        brand: d.brand,
+        price: d.purchasePrice,
+      }));
+      const newTx: Transaction = {
+        id,
+        type: "purchase",
+        customerId: params.customerId,
+        customerName: params.customerName,
+        items: txItems,
+        subtotal: params.total,
+        total: params.total,
+        paymentMethod: params.paymentMethod,
+        amountReceived: 0,
+        change: 0,
+        staffId: params.staffId,
+        staffName: params.staffName,
+        receiptNumber,
+        note: params.note,
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      };
+      setTransactions((prev) => [newTx, ...prev]);
+      return id;
+    }
+
     const now = new Date();
     const dateKey = getDateKey(now);
     const receiptNumber = await getNextReceiptNumber("purchase");
@@ -151,13 +205,10 @@ export function useTransactions() {
 
     const txRef = doc(collection(db, "transactions"));
 
-    // Create items and build transaction items
     const txItems: TransactionItem[] = [];
-    const itemIds: string[] = [];
 
     for (const itemData of params.itemsData) {
       const itemRef = doc(collection(db, "items"));
-      itemIds.push(itemRef.id);
 
       batch.set(itemRef, {
         ...itemData,
@@ -197,7 +248,6 @@ export function useTransactions() {
       updatedAt: serverTimestamp(),
     });
 
-    // Update customer stats
     if (params.customerId) {
       const customerRef = doc(db, "customers", params.customerId);
       batch.update(customerRef, {
@@ -207,7 +257,6 @@ export function useTransactions() {
       });
     }
 
-    // Increment receipt counter
     const counterRef = doc(db, "counters", "receipts", dateKey, "purchase");
     await setDoc(counterRef, { count: increment(1) }, { merge: true });
 
@@ -216,6 +265,9 @@ export function useTransactions() {
   };
 
   const getTransaction = async (id: string): Promise<Transaction | null> => {
+    if (isGuest) {
+      return transactions.find((tx) => tx.id === id) ?? null;
+    }
     const snap = await getDoc(doc(db, "transactions", id));
     if (!snap.exists()) return null;
     return docToTransaction(snap.id, snap.data() as Record<string, unknown>);

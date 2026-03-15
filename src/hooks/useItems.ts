@@ -16,6 +16,8 @@ import { db } from "@/lib/firebase/client";
 import { Item } from "@/types";
 import { toDateSafe } from "@/utils/date";
 import { generateBarcode } from "@/utils/barcode";
+import { useAuth } from "@/hooks/useAuth";
+import { SAMPLE_ITEMS } from "@/lib/sampleData";
 
 function docToItem(id: string, data: Record<string, unknown>): Item {
   return {
@@ -41,10 +43,17 @@ function docToItem(id: string, data: Record<string, unknown>): Item {
 }
 
 export function useItems() {
+  const { isGuest } = useAuth();
   const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isGuest) {
+      setItems(SAMPLE_ITEMS);
+      setLoading(false);
+      return;
+    }
+
     const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const results = snapshot.docs.map((d) =>
@@ -54,11 +63,17 @@ export function useItems() {
       setLoading(false);
     });
     return () => unsubscribe();
-  }, []);
+  }, [isGuest]);
 
   const createItem = async (
     data: Omit<Item, "id" | "barcode" | "createdAt" | "updatedAt">
   ): Promise<string> => {
+    if (isGuest) {
+      const id = `i${Date.now()}`;
+      const newItem: Item = { ...data, id, barcode: generateBarcode(), createdAt: new Date(), updatedAt: new Date() };
+      setItems((prev) => [newItem, ...prev]);
+      return id;
+    }
     const docRef = await addDoc(collection(db, "items"), {
       ...data,
       barcode: generateBarcode(),
@@ -72,6 +87,10 @@ export function useItems() {
     id: string,
     data: Partial<Omit<Item, "id" | "createdAt" | "updatedAt">>
   ): Promise<void> => {
+    if (isGuest) {
+      setItems((prev) => prev.map((i) => i.id === id ? { ...i, ...data, updatedAt: new Date() } : i));
+      return;
+    }
     await updateDoc(doc(db, "items", id), {
       ...data,
       updatedAt: serverTimestamp(),
@@ -79,6 +98,9 @@ export function useItems() {
   };
 
   const getItem = async (id: string): Promise<Item | null> => {
+    if (isGuest) {
+      return items.find((i) => i.id === id) ?? null;
+    }
     const snap = await getDoc(doc(db, "items", id));
     if (!snap.exists()) return null;
     return docToItem(snap.id, snap.data() as Record<string, unknown>);

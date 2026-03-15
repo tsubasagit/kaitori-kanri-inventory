@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/lib/firebase/auth";
+import { useAuth } from "@/hooks/useAuth";
 import { Button, Input, Card } from "@/components/ui";
 import { ROUTES } from "@/constants/routes";
 
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const { guestLogin } = useAuth();
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -26,6 +28,11 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGuestLogin = () => {
+    guestLogin();
+    router.push(ROUTES.dashboard);
   };
 
   return (
@@ -69,6 +76,16 @@ export default function LoginPage() {
           ログイン
         </Button>
       </form>
+
+      <div className="mt-4 border-t border-border pt-4">
+        <Button
+          variant="outline"
+          className="w-full"
+          onClick={handleGuestLogin}
+        >
+          ゲストログイン
+        </Button>
+      </div>
     </Card>
   );
 }

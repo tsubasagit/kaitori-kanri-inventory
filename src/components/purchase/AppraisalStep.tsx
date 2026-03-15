@@ -5,6 +5,8 @@ import { Button, Input, Select } from "@/components/ui";
 import { ItemCondition } from "@/types";
 import { CATEGORIES, SIZES, COLORS } from "@/constants/categories";
 import { CONDITION_LABELS } from "@/constants/statuses";
+import { CameraCapture } from "./CameraCapture";
+import { QRScanner } from "./QRScanner";
 
 export type AppraisalItem = {
   name: string;
@@ -16,6 +18,7 @@ export type AppraisalItem = {
   condition: ItemCondition;
   purchasePrice: number;
   sellingPrice: number;
+  photos: string[];
 };
 
 type AppraisalStepProps = {
@@ -35,6 +38,7 @@ const emptyItem: AppraisalItem = {
   condition: "B",
   purchasePrice: 0,
   sellingPrice: 0,
+  photos: [],
 };
 
 export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepProps) {
@@ -55,8 +59,12 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
   const handleAdd = () => {
     if (!validate()) return;
     onAdd(current);
-    setCurrent({ ...emptyItem });
+    setCurrent({ ...emptyItem, photos: [] });
     setErrors({});
+  };
+
+  const handleQRScan = (value: string) => {
+    setCurrent((p) => ({ ...p, name: p.name ? `${p.name} [${value}]` : value }));
   };
 
   const total = items.reduce((sum, item) => sum + item.purchasePrice, 0);
@@ -74,11 +82,21 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
                 key={idx}
                 className="flex items-center justify-between rounded-lg bg-muted p-3"
               >
-                <div>
-                  <p className="text-sm font-medium">{item.name}</p>
-                  <p className="text-xs text-secondary">
-                    {item.brand} / {CONDITION_LABELS[item.condition]}
-                  </p>
+                <div className="flex items-center gap-3">
+                  {item.photos.length > 0 && (
+                    <img
+                      src={item.photos[0]}
+                      alt={item.name}
+                      className="h-12 w-12 shrink-0 rounded-md border border-border object-cover"
+                    />
+                  )}
+                  <div>
+                    <p className="text-sm font-medium">{item.name}</p>
+                    <p className="text-xs text-secondary">
+                      {item.brand} / {CONDITION_LABELS[item.condition]}
+                      {item.photos.length > 0 && ` / 写真${item.photos.length}枚`}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex items-center gap-3">
                   <p className="text-sm font-medium text-primary">
@@ -107,6 +125,27 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
       <div className="rounded-lg border border-border p-4">
         <h3 className="mb-3 text-sm font-medium text-foreground">商品を追加</h3>
         <div className="space-y-4">
+          {/* カメラ・QR セクション */}
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+            <div className="rounded-lg border border-border p-3">
+              <CameraCapture
+                photos={current.photos}
+                onCapture={(dataUrl) =>
+                  setCurrent((p) => ({ ...p, photos: [...p.photos, dataUrl] }))
+                }
+                onRemove={(idx) =>
+                  setCurrent((p) => ({
+                    ...p,
+                    photos: p.photos.filter((_, i) => i !== idx),
+                  }))
+                }
+              />
+            </div>
+            <div className="rounded-lg border border-border p-3">
+              <QRScanner onScan={handleQRScan} />
+            </div>
+          </div>
+
           <Input
             label="商品名"
             value={current.name}

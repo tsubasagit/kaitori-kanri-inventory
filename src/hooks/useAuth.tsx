@@ -17,6 +17,8 @@ type AuthContextType = {
   profile: UserProfile | null;
   loading: boolean;
   error: string | null;
+  isGuest: boolean;
+  guestLogin: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -26,6 +28,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
     let loadingCleared = false;
@@ -68,8 +71,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
+  const guestLogin = () => {
+    const guestUser = { uid: "guest", displayName: "ゲスト" } as User;
+    const guestProfile: UserProfile = {
+      uid: "guest",
+      email: "guest@example.com",
+      displayName: "ゲストスタッフ",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    setUser(guestUser);
+    setProfile(guestProfile);
+    setIsGuest(true);
+    setLoading(false);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, profile, loading, error }}>
+    <AuthContext.Provider value={{ user, profile, loading, error, isGuest, guestLogin }}>
       {children}
     </AuthContext.Provider>
   );

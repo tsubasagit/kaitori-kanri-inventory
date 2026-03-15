@@ -27,6 +27,25 @@ export function CustomerStep({ customers, onSelect, onCreateNew }: CustomerStepP
 
   return (
     <div className="space-y-4">
+      <button
+        type="button"
+        onClick={onCreateNew}
+        className="flex w-full items-center gap-4 rounded-xl border-2 border-dashed border-primary bg-primary-light/50 p-5 text-left transition-colors hover:bg-primary-light"
+      >
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-primary text-white">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-6 w-6">
+            <path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" y1="8" x2="19" y2="14" />
+            <line x1="22" y1="11" x2="16" y2="11" />
+          </svg>
+        </div>
+        <div>
+          <p className="text-base font-bold text-primary">新規顧客登録</p>
+          <p className="text-sm text-primary/70">初めてのお客様はこちらから登録してください</p>
+        </div>
+      </button>
+
       <div className="flex flex-col gap-3 sm:flex-row">
         <Input
           placeholder="氏名・カナ・電話番号で検索..."
@@ -34,9 +53,6 @@ export function CustomerStep({ customers, onSelect, onCreateNew }: CustomerStepP
           onChange={(e) => setSearch(e.target.value)}
           className="flex-1"
         />
-        <Button variant="outline" onClick={onCreateNew}>
-          新規顧客登録
-        </Button>
       </div>
 
       <div className="space-y-2">
