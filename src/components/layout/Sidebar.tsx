@@ -70,6 +70,14 @@ const CustomerIcon = (
   </svg>
 );
 
+const StocktakingIcon = (
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+    <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2" />
+    <rect x="9" y="3" width="6" height="4" rx="1" />
+    <path d="M9 14l2 2 4-4" />
+  </svg>
+);
+
 const navGroups: NavGroup[] = [
   {
     items: [
@@ -88,6 +96,7 @@ const navGroups: NavGroup[] = [
     title: "管理",
     items: [
       { label: "在庫管理", href: ROUTES.items, icon: ItemIcon },
+      { label: "棚卸", href: ROUTES.stocktaking, icon: StocktakingIcon },
       { label: "顧客管理", href: ROUTES.customers, icon: CustomerIcon },
     ],
   },

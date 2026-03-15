@@ -1,4 +1,4 @@
-import type { ItemStatus, ItemCondition, PaymentMethod, TransactionType, CustomerType, IdentityDocumentType } from "@/types";
+import type { ItemStatus, ItemCondition, PaymentMethod, TransactionType, CustomerType, IdentityDocumentType, StocktakingStatus, StocktakingScope } from "@/types";
 
 export const ITEM_STATUS_LABELS: Record<ItemStatus, string> = {
   in_stock: "在庫あり",
@@ -47,4 +47,19 @@ export const IDENTITY_DOCUMENT_LABELS: Record<IdentityDocumentType, string> = {
   insurance_card: "健康保険証",
   residence_card: "在留カード",
   other: "その他",
+};
+
+export const STOCKTAKING_STATUS_LABELS: Record<StocktakingStatus, string> = {
+  open: "実施中",
+  closed: "完了",
+};
+
+export const STOCKTAKING_STATUS_COLORS: Record<StocktakingStatus, { color: string; bgColor: string }> = {
+  open: { color: "var(--warning)", bgColor: "var(--warning-light)" },
+  closed: { color: "var(--success)", bgColor: "var(--success-light)" },
+};
+
+export const STOCKTAKING_SCOPE_LABELS: Record<StocktakingScope, string> = {
+  full: "全品棚卸",
+  category: "カテゴリ別",
 };

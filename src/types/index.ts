@@ -6,6 +6,13 @@ export type {
   TransactionItem,
   PaymentMethod,
 } from "./transaction";
+export type {
+  StocktakingSession,
+  StocktakingStatus,
+  StocktakingScope,
+  ScannedItem,
+  StocktakingReport,
+} from "./stocktaking";
 
 export type UserProfile = {
   uid: string;

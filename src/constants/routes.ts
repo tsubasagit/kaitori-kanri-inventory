@@ -11,4 +11,7 @@ export const ROUTES = {
   salesNew: "/sales/new",
   transactions: "/transactions",
   transactionDetail: (id: string) => `/transactions/${id}`,
+  stocktaking: "/stocktaking",
+  stocktakingNew: "/stocktaking/new",
+  stocktakingDetail: (id: string) => `/stocktaking/${id}`,
 } as const;

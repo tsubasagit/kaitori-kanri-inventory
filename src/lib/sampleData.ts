@@ -1,4 +1,4 @@
-import type { Item, Customer, Transaction } from "@/types";
+import type { Item, Customer, Transaction, StocktakingSession } from "@/types";
 
 const today = new Date();
 const yesterday = new Date(today.getTime() - 86400000);
@@ -376,5 +376,45 @@ export const SAMPLE_TRANSACTIONS: Transaction[] = [
     note: "",
     createdAt: today,
     updatedAt: today,
+  },
+];
+
+export const SAMPLE_STOCKTAKING_SESSIONS: StocktakingSession[] = [
+  {
+    id: "st1",
+    status: "closed",
+    scope: "category",
+    targetCategory: "tops",
+    startedBy: "ゲストスタッフ",
+    scannedItems: [
+      { itemId: "i3", barcode: "HKM-20260312-0002", itemName: "Supreme Box Logo Tシャツ", brand: "Supreme", scannedAt: twoDaysAgo, scannedBy: "ゲストスタッフ" },
+      { itemId: "i5", barcode: "HKM-20260312-0003", itemName: "BEAMS チェックシャツ", brand: "BEAMS", scannedAt: twoDaysAgo, scannedBy: "ゲストスタッフ" },
+      { itemId: "i6", barcode: "HKM-20260313-0002", itemName: "Ralph Lauren ニットセーター", brand: "Ralph Lauren", scannedAt: twoDaysAgo, scannedBy: "ゲストスタッフ" },
+    ],
+    report: {
+      systemCount: 3,
+      scannedCount: 3,
+      matchedCount: 3,
+      missingItems: [],
+      unknownBarcodes: [],
+    },
+    note: "トップスの定期棚卸",
+    createdAt: twoDaysAgo,
+    closedAt: twoDaysAgo,
+  },
+  {
+    id: "st2",
+    status: "open",
+    scope: "full",
+    targetCategory: "",
+    startedBy: "ゲストスタッフ",
+    scannedItems: [
+      { itemId: "i1", barcode: "HKM-20260312-0001", itemName: "Levi's 501 デニムパンツ W32", brand: "Levi's", scannedAt: today, scannedBy: "ゲストスタッフ" },
+      { itemId: "i2", barcode: "HKM-20260313-0001", itemName: "THE NORTH FACE マウンテンパーカー", brand: "THE NORTH FACE", scannedAt: today, scannedBy: "ゲストスタッフ" },
+    ],
+    report: null,
+    note: "月次全品棚卸",
+    createdAt: today,
+    closedAt: null,
   },
 ];
