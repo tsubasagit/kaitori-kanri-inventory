@@ -1,0 +1,40 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // 在庫
+    match /items/{itemId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 顧客
+    match /customers/{customerId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 取引
+    match /transactions/{transactionId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // 棚卸し
+    match /stocktaking_sessions/{sessionId} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // レシート番号カウンター
+    match /counters/{document=**} {
+      allow read, write: if isAuthenticated();
+    }
+
+    // ユーザー
+    match /users/{uid} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == uid;
+    }
+  }
+}
