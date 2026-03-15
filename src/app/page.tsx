@@ -188,10 +188,46 @@ export default function Home() {
         </div>
       </section>
 
+      {/* お問い合わせ */}
+      <section className="border-t border-border px-4 py-16 sm:py-20">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="text-2xl font-bold text-foreground sm:text-3xl">お問い合わせ</h2>
+          <p className="mt-3 text-secondary">
+            導入のご相談・カスタマイズのご要望など、お気軽にお問い合わせください。
+          </p>
+          <div className="mt-8">
+            <a
+              href="https://share.hsforms.com/2T1pQ6j2sQzajdd3AIDeWqgcy93d?utm_source=kaitori-kanri-inventory"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-lg bg-primary px-8 py-3 font-semibold text-white transition-colors hover:bg-primary-hover"
+            >
+              AppTalentHub に問い合わせる
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" className="h-5 w-5">
+                <path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6" />
+                <polyline points="15 3 21 3 21 9" />
+                <line x1="10" y1="14" x2="21" y2="3" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* フッター */}
-      <footer className="border-t border-border px-4 py-8">
+      <footer className="border-t border-border bg-muted px-4 py-8">
         <div className="mx-auto max-w-5xl text-center">
           <p className="text-sm text-secondary">古着在庫管理システム — デモ版</p>
+          <p className="mt-2 text-xs text-secondary">
+            お問い合わせ:&nbsp;
+            <a
+              href="https://share.hsforms.com/2T1pQ6j2sQzajdd3AIDeWqgcy93d?utm_source=kaitori-kanri-inventory"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              AppTalentHub
+            </a>
+          </p>
         </div>
       </footer>
     </div>
