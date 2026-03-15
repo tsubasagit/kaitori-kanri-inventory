@@ -5,8 +5,8 @@ const isGhPages = process.env.GITHUB_PAGES === "true";
 const nextConfig: NextConfig = {
   output: "export",
   trailingSlash: true,
-  basePath: isGhPages ? "/hakamada-inventory" : "",
-  assetPrefix: isGhPages ? "/hakamada-inventory/" : "",
+  basePath: isGhPages ? "/kaitori-kanri-inventory" : "",
+  assetPrefix: isGhPages ? "/kaitori-kanri-inventory/" : "",
 };
 
 export default nextConfig;
