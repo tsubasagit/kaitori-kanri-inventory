@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Input, Select, Textarea } from "@/components/ui";
-import { Item, ItemCondition } from "@/types";
+import { Button, Input, Select } from "@/components/ui";
+import { ItemCondition } from "@/types";
 import { CATEGORIES, SIZES, COLORS, POPULAR_BRANDS } from "@/constants/categories";
 import { CONDITION_LABELS } from "@/constants/statuses";
+import { CameraCapture } from "@/components/purchase/CameraCapture";
+import { QRScanner } from "@/components/purchase/QRScanner";
 
 type ItemFormData = {
   name: string;
@@ -16,15 +18,18 @@ type ItemFormData = {
   condition: ItemCondition;
   purchasePrice: number;
   sellingPrice: number;
+  photos: string[];
+  scannedCode: string;
 };
 
 type ItemFormProps = {
   initialData?: Partial<ItemFormData>;
   onSubmit: (data: ItemFormData) => Promise<void>;
   loading?: boolean;
+  showCamera?: boolean;
 };
 
-export function ItemForm({ initialData, onSubmit, loading }: ItemFormProps) {
+export function ItemForm({ initialData, onSubmit, loading, showCamera = true }: ItemFormProps) {
   const [form, setForm] = useState<ItemFormData>({
     name: initialData?.name ?? "",
     brand: initialData?.brand ?? "",
@@ -35,6 +40,8 @@ export function ItemForm({ initialData, onSubmit, loading }: ItemFormProps) {
     condition: initialData?.condition ?? "B",
     purchasePrice: initialData?.purchasePrice ?? 0,
     sellingPrice: initialData?.sellingPrice ?? 0,
+    photos: initialData?.photos ?? [],
+    scannedCode: initialData?.scannedCode ?? "",
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -69,6 +76,39 @@ export function ItemForm({ initialData, onSubmit, loading }: ItemFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
+      {/* カメラ・QRコード セクション */}
+      {showCamera && (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="rounded-lg border border-border p-4">
+            <CameraCapture
+              photos={form.photos}
+              onCapture={(dataUrl) =>
+                update("photos", [...form.photos, dataUrl])
+              }
+              onRemove={(idx) =>
+                update("photos", form.photos.filter((_, i) => i !== idx))
+              }
+            />
+          </div>
+          <div className="rounded-lg border border-border p-4">
+            <QRScanner
+              onScan={(value) => {
+                update("scannedCode", value);
+                if (!form.name) {
+                  update("name", value);
+                }
+              }}
+            />
+            {form.scannedCode && (
+              <div className="mt-2">
+                <p className="text-xs text-secondary">読み取り済みコード</p>
+                <p className="font-mono text-sm text-foreground">{form.scannedCode}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       <Input
         label="商品名"
         value={form.name}
