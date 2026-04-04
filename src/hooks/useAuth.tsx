@@ -31,6 +31,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isGuest, setIsGuest] = useState(false);
 
   useEffect(() => {
+    // sessionStorage からゲスト状態を復元
+    if (typeof window !== "undefined" && sessionStorage.getItem("guest") === "1") {
+      guestLogin();
+      return;
+    }
+
     let loadingCleared = false;
     const clearLoading = () => {
       if (loadingCleared) return;
@@ -84,6 +90,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setProfile(guestProfile);
     setIsGuest(true);
     setLoading(false);
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("guest", "1");
+    }
   };
 
   return (

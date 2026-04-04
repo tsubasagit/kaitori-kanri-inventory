@@ -50,6 +50,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   if (!user) return null;
 
   const handleLogout = async () => {
+    sessionStorage.removeItem("guest");
     await signOut();
     router.push(ROUTES.login);
   };
