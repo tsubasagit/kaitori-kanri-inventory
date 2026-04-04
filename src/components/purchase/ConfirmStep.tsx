@@ -72,6 +72,9 @@ export function ConfirmStep({
                 <p className="text-xs text-secondary">
                   {item.brand} / {CONDITION_LABELS[item.condition]}
                 </p>
+                {item.barcode && (
+                  <p className="font-mono text-xs text-primary">{item.barcode}</p>
+                )}
               </div>
               <p className="text-sm font-medium">{formatCurrency(item.purchasePrice)}</p>
             </div>

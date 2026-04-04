@@ -6,7 +6,7 @@ import { ItemCondition } from "@/types";
 import { CATEGORIES, SIZES, COLORS } from "@/constants/categories";
 import { CONDITION_LABELS } from "@/constants/statuses";
 import { CameraCapture } from "./CameraCapture";
-import { QRScanner } from "./QRScanner";
+import { BarcodeGenerator } from "./BarcodeGenerator";
 
 export type AppraisalItem = {
   name: string;
@@ -19,6 +19,7 @@ export type AppraisalItem = {
   purchasePrice: number;
   sellingPrice: number;
   photos: string[];
+  barcode: string;
 };
 
 type AppraisalStepProps = {
@@ -39,6 +40,7 @@ const emptyItem: AppraisalItem = {
   purchasePrice: 0,
   sellingPrice: 0,
   photos: [],
+  barcode: "",
 };
 
 export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepProps) {
@@ -63,8 +65,8 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
     setErrors({});
   };
 
-  const handleQRScan = (value: string) => {
-    setCurrent((p) => ({ ...p, name: p.name ? `${p.name} [${value}]` : value }));
+  const handleBarcodeGenerate = (barcode: string) => {
+    setCurrent((p) => ({ ...p, barcode }));
   };
 
   const total = items.reduce((sum, item) => sum + item.purchasePrice, 0);
@@ -96,6 +98,9 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
                       {item.brand} / {CONDITION_LABELS[item.condition]}
                       {item.photos.length > 0 && ` / 写真${item.photos.length}枚`}
                     </p>
+                    {item.barcode && (
+                      <p className="font-mono text-xs text-primary">{item.barcode}</p>
+                    )}
                   </div>
                 </div>
                 <div className="flex items-center gap-3">
@@ -142,7 +147,7 @@ export function AppraisalStep({ items, onAdd, onRemove, onNext }: AppraisalStepP
               />
             </div>
             <div className="rounded-lg border border-border p-3">
-              <QRScanner onScan={handleQRScan} />
+              <BarcodeGenerator barcode={current.barcode} onGenerate={handleBarcodeGenerate} />
             </div>
           </div>
 
