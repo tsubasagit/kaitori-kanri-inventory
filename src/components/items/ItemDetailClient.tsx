@@ -13,6 +13,7 @@ import { CONDITION_LABELS, ITEM_STATUS_LABELS } from "@/constants/statuses";
 import { formatCurrency } from "@/utils/currency";
 import { formatDate } from "@/utils/date";
 import { ROUTES } from "@/constants/routes";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function ItemDetailClient() {
   const params = useParams();
@@ -154,10 +155,6 @@ export default function ItemDetailClient() {
             </p>
           </div>
           <div>
-            <p className="text-xs text-secondary">バーコード</p>
-            <p className="font-mono text-sm">{item.barcode}</p>
-          </div>
-          <div>
             <p className="text-xs text-secondary">登録者</p>
             <p className="text-sm">{item.registeredBy || "-"}</p>
           </div>
@@ -167,6 +164,20 @@ export default function ItemDetailClient() {
           </div>
         </div>
       </Card>
+
+      {item.barcode && (
+        <Card title="QRコード / バーコード">
+          <div className="flex items-center gap-6">
+            <div className="shrink-0 rounded-lg bg-white p-3">
+              <QRCodeSVG value={item.barcode} size={120} />
+            </div>
+            <div>
+              <p className="font-mono text-lg font-bold text-foreground">{item.barcode}</p>
+              <p className="mt-1 text-sm text-secondary">販売レジでこのQRコードをスキャンすると、カートに追加できます</p>
+            </div>
+          </div>
+        </Card>
+      )}
 
       <Card title="ステータス変更">
         <div className="flex items-center gap-4">

@@ -99,7 +99,7 @@ export function useItems() {
 
   const getItem = async (id: string): Promise<Item | null> => {
     if (isGuest) {
-      return items.find((i) => i.id === id) ?? null;
+      return SAMPLE_ITEMS.find((i) => i.id === id) ?? null;
     }
     const snap = await getDoc(doc(db, "items", id));
     if (!snap.exists()) return null;
