@@ -151,7 +151,15 @@ export function ItemScanner({ items, onSelect, cartItemIds }: ItemScannerProps) 
         ) : (
           <div className="space-y-2">
             <div className="relative overflow-hidden rounded-lg border-2 border-primary bg-black">
-              <video ref={videoRef} autoPlay playsInline muted className="w-full" />
+              <video
+                ref={(el) => {
+                  videoRef.current = el;
+                  if (el && streamRef.current) {
+                    el.srcObject = streamRef.current;
+                  }
+                }}
+                autoPlay playsInline muted className="w-full"
+              />
               <div className="absolute inset-0 flex items-center justify-center">
                 <div className="h-40 w-40 rounded-lg border-2 border-white/70 shadow-[0_0_0_9999px_rgba(0,0,0,0.3)]" />
               </div>

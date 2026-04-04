@@ -88,7 +88,12 @@ export function CameraCapture({ photos, onCapture, onRemove }: CameraCaptureProp
         <div className="space-y-2">
           <div className="relative overflow-hidden rounded-lg border border-border bg-black">
             <video
-              ref={videoRef}
+              ref={(el) => {
+                videoRef.current = el;
+                if (el && streamRef.current) {
+                  el.srcObject = streamRef.current;
+                }
+              }}
               autoPlay
               playsInline
               muted

@@ -129,7 +129,12 @@ export function QRScanner({ onScan }: QRScannerProps) {
       {active && (
         <div className="relative overflow-hidden rounded-lg border-2 border-primary bg-black">
           <video
-            ref={videoRef}
+            ref={(el) => {
+              videoRef.current = el;
+              if (el && streamRef.current) {
+                el.srcObject = streamRef.current;
+              }
+            }}
             autoPlay
             playsInline
             muted
