@@ -1,9 +1,8 @@
 import TransactionDetailClient from "@/components/transactions/TransactionDetailClient";
-
-export const revalidate = 0;
+import { SAMPLE_TRANSACTIONS } from "@/lib/sampleData";
 
 export async function generateStaticParams() {
-  return [];
+  return SAMPLE_TRANSACTIONS.map((t) => ({ id: t.id }));
 }
 
 export default function TransactionDetailPage() {

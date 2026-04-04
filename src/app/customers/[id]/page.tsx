@@ -1,9 +1,8 @@
 import CustomerDetailClient from "@/components/customers/CustomerDetailClient";
-
-export const revalidate = 0;
+import { SAMPLE_CUSTOMERS } from "@/lib/sampleData";
 
 export async function generateStaticParams() {
-  return [];
+  return SAMPLE_CUSTOMERS.map((c) => ({ id: c.id }));
 }
 
 export default function CustomerDetailPage() {

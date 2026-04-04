@@ -1,9 +1,8 @@
 import ItemDetailClient from "@/components/items/ItemDetailClient";
-
-export const revalidate = 0;
+import { SAMPLE_ITEMS } from "@/lib/sampleData";
 
 export async function generateStaticParams() {
-  return [];
+  return SAMPLE_ITEMS.map((item) => ({ id: item.id }));
 }
 
 export default function ItemDetailPage() {

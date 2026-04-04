@@ -1,9 +1,8 @@
 import { StocktakingDetailClient } from "@/components/stocktaking/StocktakingDetailClient";
-
-export const revalidate = 0;
+import { SAMPLE_STOCKTAKING_SESSIONS } from "@/lib/sampleData";
 
 export async function generateStaticParams() {
-  return [];
+  return SAMPLE_STOCKTAKING_SESSIONS.map((s) => ({ id: s.id }));
 }
 
 export default function StocktakingDetailPage() {
