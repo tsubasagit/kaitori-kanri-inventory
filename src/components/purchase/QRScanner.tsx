@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
+import { BarcodeDetector } from "barcode-detector/pure";
 import { Button } from "@/components/ui";
 
 type QRScannerProps = {
@@ -42,11 +43,6 @@ export function QRScanner({ onScan }: QRScannerProps) {
     setError("");
     setLastScanned("");
 
-    if (!("BarcodeDetector" in window)) {
-      setError("このブラウザはQRコード読み取りに対応していません。Chrome / Edge をお使いください。");
-      return;
-    }
-
     try {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: { facingMode: "environment", width: { ideal: 1280 }, height: { ideal: 720 } },
@@ -57,7 +53,6 @@ export function QRScanner({ onScan }: QRScannerProps) {
       }
       setActive(true);
 
-      // @ts-expect-error BarcodeDetector is not in all TS libs
       const detector = new BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] });
 
       const scan = async () => {
