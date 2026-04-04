@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useCallback, useEffect } from "react";
-import { BarcodeDetector } from "barcode-detector/pure";
 import { Button } from "@/components/ui";
 
 type QRScannerProps = {
@@ -53,7 +52,14 @@ export function QRScanner({ onScan }: QRScannerProps) {
       }
       setActive(true);
 
-      const detector = new BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] });
+      let detector: { detect: (source: HTMLVideoElement) => Promise<{ rawValue: string }[]> };
+      if ("BarcodeDetector" in window) {
+        // @ts-expect-error BarcodeDetector is not in all TS libs
+        detector = new window.BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] });
+      } else {
+        const { BarcodeDetector } = await import("barcode-detector/pure");
+        detector = new BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] as ("qr_code" | "code_128" | "ean_13" | "ean_8")[] });
+      }
 
       const scan = async () => {
         if (!videoRef.current || videoRef.current.readyState < 2) {

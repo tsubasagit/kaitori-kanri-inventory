@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo, useRef, useCallback, useEffect } from "react";
-import { BarcodeDetector } from "barcode-detector/pure";
 import { Input, Button, Badge } from "@/components/ui";
 import { Item } from "@/types";
 import { ItemStatusBadge } from "@/components/items/ItemStatusBadge";
@@ -89,7 +88,14 @@ export function ItemScanner({ items, onSelect, cartItemIds }: ItemScannerProps) 
       }
       setScannerActive(true);
 
-      const detector = new BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] });
+      let detector: { detect: (source: HTMLVideoElement) => Promise<{ rawValue: string }[]> };
+      if ("BarcodeDetector" in window) {
+        // @ts-expect-error BarcodeDetector is not in all TS libs
+        detector = new window.BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] });
+      } else {
+        const { BarcodeDetector } = await import("barcode-detector/pure");
+        detector = new BarcodeDetector({ formats: ["qr_code", "code_128", "ean_13", "ean_8"] as ("qr_code" | "code_128" | "ean_13" | "ean_8")[] });
+      }
       let lastValue = "";
 
       const scan = async () => {
