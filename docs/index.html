@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>忠右衛門 DX支援 — プレゼン資料一覧</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Yu Gothic', sans-serif;
+      background: #f8fafc;
+      color: #1e293b;
+      line-height: 1.7;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #538bb0 0%, #3d6f94 100%);
+      color: #fff;
+      padding: 48px 24px;
+      text-align: center;
+    }
+    .header h1 { font-size: 2rem; font-weight: 700; margin-bottom: 8px; }
+    .header p { color: rgba(255,255,255,0.8); font-size: 1rem; }
+    .header .date {
+      display: inline-block;
+      margin-top: 16px;
+      background: rgba(255,255,255,0.15);
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+
+    .container { max-width: 960px; margin: 0 auto; padding: 48px 24px 80px; }
+
+    .section { margin-bottom: 48px; }
+    .section h2 {
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #538bb0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section h2 .num {
+      background: #538bb0;
+      color: #fff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      flex-shrink: 0;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s;
+      display: flex;
+      align-items: stretch;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    }
+
+    .card-tag {
+      width: 6px;
+      flex-shrink: 0;
+    }
+    .card-tag.html { background: #538bb0; }
+    .card-tag.md { background: #22c55e; }
+    .card-tag.pdf { background: #ef4444; }
+    .card-tag.img { background: #f97316; }
+
+    .card-body {
+      padding: 20px 24px;
+      flex: 1;
+    }
+    .card-body h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .card-body h3 a {
+      color: #1e293b;
+      text-decoration: none;
+    }
+    .card-body h3 a:hover { color: #538bb0; }
+    .card-body p {
+      color: #64748b;
+      font-size: 0.88rem;
+    }
+    .card-body .badge {
+      display: inline-block;
+      padding: 2px 10px;
+      border-radius: 10px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-top: 8px;
+    }
+    .badge.html { background: #eff6ff; color: #1e40af; }
+    .badge.md { background: #f0fdf4; color: #166534; }
+    .badge.pdf { background: #fef2f2; color: #991b1b; }
+    .badge.recommended { background: #fef3c7; color: #92400e; }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 12px;
+    }
+    .photo-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    .photo-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      display: block;
+    }
+    .photo-card .caption {
+      padding: 8px 12px;
+      font-size: 0.78rem;
+      color: #64748b;
+    }
+
+    .agenda {
+      background: #fff;
+      border-radius: 12px;
+      padding: 28px 32px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+    }
+    .agenda h3 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .agenda ol {
+      padding-left: 20px;
+    }
+    .agenda li {
+      padding: 6px 0;
+      font-size: 0.92rem;
+    }
+    .agenda li strong { color: #538bb0; }
+
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .faq {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+      overflow: hidden;
+    }
+    .faq summary {
+      padding: 20px 24px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background 0.15s;
+    }
+    .faq summary:hover { background: #f8fafc; }
+    .faq summary::before {
+      content: "Q";
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      background: #538bb0;
+      color: #fff;
+      border-radius: 50%;
+      font-size: 0.8rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+    .faq[open] summary { border-bottom: 1px solid #f1f5f9; }
+    .faq-answer {
+      padding: 20px 24px 24px 64px;
+    }
+    .faq-answer p {
+      font-size: 0.92rem;
+      color: #475569;
+      margin-bottom: 12px;
+      line-height: 1.8;
+    }
+    .faq-answer p:last-child { margin-bottom: 0; }
+    .faq-answer strong { color: #1e293b; }
+    .faq-answer ol {
+      padding-left: 20px;
+      margin-bottom: 12px;
+    }
+    .faq-answer li {
+      font-size: 0.92rem;
+      color: #475569;
+      padding: 4px 0;
+      line-height: 1.7;
+    }
+
+    .footer {
+      text-align: center;
+      padding: 40px 24px;
+      color: #94a3b8;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h1>忠右衛門 DX支援 — プレゼン資料</h1>
+    <p>AppTalentHub株式会社 / 宮崎翼</p>
+    <div class="date">2026年4月12日 打ち合わせ用</div>
+  </div>
+
+  <div class="container">
+
+    <!-- アジェンダ -->
+    <div class="section">
+      <h2><span class="num">0</span>アジェンダ</h2>
+      <div class="agenda">
+        <h3>本日の流れ</h3>
+        <ol>
+          <li><strong>現行フローの確認</strong> — 七福神 + SATO V5 の運用を整理</li>
+          <li><strong>Notion導入の効果</strong> — 5月導入予定のNotionでカバーできる範囲</li>
+          <li><strong>まだ残る課題</strong> — Notionだけでは届かない領域</li>
+          <li><strong>プロトタイプのデモ</strong> — 「自分ならこう運用する」を形にしたアプリ</li>
+          <li><strong>3ステップ構想</strong> — 全工程カバー → 統合DB → AI拡張</li>
+          <li><strong>ディスカッション</strong> — 次のアクション</li>
+        </ol>
+      </div>
+    </div>
+
+    <!-- メイン資料 -->
+    <div class="section">
+      <h2><span class="num">1</span>メイン資料</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-tag html"></div>
+          <div class="card-body">
+            <h3><a href="notion_before_after.html">Before / After 比較ページ</a></h3>
+            <p>現行フロー → Notion導入 → プロトタイプの3段階で、改善の全体像を可視化。画像・改善ポイント・課題・3ステップ構想を全て含む統合資料</p>
+            <span class="badge recommended">プレゼンのメイン</span>
+            <span class="badge html">HTML</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-tag md"></div>
+          <div class="card-body">
+            <h3><a href="meeting_notes_2026-04-11.md">議事録 2026-04-11</a></h3>
+            <p>忠右衛門の基本情報、M&A経緯、現行システム構成（七福神・SATO・Notion）、業務フロー、プロトタイプの価値比較表</p>
+            <span class="badge md">Markdown</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 補足資料 -->
+    <div class="section">
+      <h2><span class="num">2</span>補足資料</h2>
+      <div class="card-grid">
+        <div class="card">
+          <div class="card-tag md"></div>
+          <div class="card-body">
+            <h3><a href="bottleneck_solution.md">ボトルネック分析 & Phase戦略</a></h3>
+            <p>CHUEMONの2大ボトルネック（在庫回転率・一人当たり売上高）の分析と、Phase 1〜5のロードマップ</p>
+            <span class="badge md">Markdown</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-tag md"></div>
+          <div class="card-body">
+            <h3><a href="identity_verification_plan.md">本人確認方針書（古物営業法）</a></h3>
+            <p>対面・宅配買取における本人確認方法の整理。eKYC導入の方針</p>
+            <span class="badge md">Markdown</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-tag html"></div>
+          <div class="card-body">
+            <h3><a href="identity_verification_proposal.html">本人確認 提案書</a></h3>
+            <p>eKYC導入の提案書（HTML形式）</p>
+            <span class="badge html">HTML</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-tag md"></div>
+          <div class="card-body">
+            <h3><a href="qrcode-guide.md">QRコード運用ガイド</a></h3>
+            <p>QRコード/バーコードの作成方法、貼付位置、スキャン実装の詳細</p>
+            <span class="badge md">Markdown</span>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-tag pdf"></div>
+          <div class="card-body">
+            <h3><a href="pmi_presentation.pdf">PMI×DX 合宿プレゼン資料</a></h3>
+            <p>袴田氏・山下氏・宮崎による合宿セミナー発表資料（PDF）</p>
+            <span class="badge pdf">PDF</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- フロー図 -->
+    <div class="section">
+      <h2><span class="num">3</span>フロー図（画像）</h2>
+      <div class="photo-grid">
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/current_flow_infographic.png"><img src="screenshots/tyuemon/current_flow_infographic.png" alt="現行フロー"></a>
+          <div class="caption">BEFORE: 現行業務フロー</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/notion_coverage_flow.png"><img src="screenshots/tyuemon/notion_coverage_flow.png" alt="Notionカバー範囲"></a>
+          <div class="caption">AFTER 1: Notionカバー範囲</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/prototype_coverage_flow.jpg"><img src="screenshots/tyuemon/prototype_coverage_flow.jpg" alt="プロトタイプカバー範囲"></a>
+          <div class="caption">AFTER 2: プロトタイプ</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/step1_full_coverage.jpg"><img src="screenshots/tyuemon/step1_full_coverage.jpg" alt="STEP 1"></a>
+          <div class="caption">STEP 1: 全工程カバー</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/step2_single_database.jpg"><img src="screenshots/tyuemon/step2_single_database.jpg" alt="STEP 2"></a>
+          <div class="caption">STEP 2: 統合DB</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/step3_ai_extension.jpg"><img src="screenshots/tyuemon/step3_ai_extension.jpg" alt="STEP 3"></a>
+          <div class="caption">STEP 3: AI拡張</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 現場写真 -->
+    <div class="section">
+      <h2><span class="num">4</span>現場写真</h2>
+      <div class="photo-grid">
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/product_tag.jpg"><img src="screenshots/tyuemon/product_tag.jpg" alt="商品タグ"></a>
+          <div class="caption">商品タグ（振袖 5010-02933）</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/shichifukujin_screen1.jpg"><img src="screenshots/tyuemon/shichifukujin_screen1.jpg" alt="七福神画面"></a>
+          <div class="caption">七福神 IC札発行ソフト</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/sato_printer.jpg"><img src="screenshots/tyuemon/sato_printer.jpg" alt="SATOプリンター"></a>
+          <div class="caption">SATO STS300 プリンター</div>
+        </div>
+        <div class="photo-card">
+          <a href="screenshots/tyuemon/sato_serial.jpg"><img src="screenshots/tyuemon/sato_serial.jpg" alt="SATO型番"></a>
+          <div class="caption">SATO STS300 型番ラベル</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FAQ -->
+    <div class="section">
+      <h2><span class="num">5</span>よくある質問（経営者の方へ）</h2>
+      <div class="faq-list">
+
+        <details class="faq" open>
+          <summary>「うちはNotionでうまく回ってるけど、わざわざ変える必要ある？」</summary>
+          <div class="faq-answer">
+            <p>Notionが回っているなら、それは素晴らしいことです。無理に変える必要はありません。</p>
+            <p>ただ、Notionは「データベース」であって「アプリ」ではありません。バーコードスキャンでの販売、レシート発行、本人確認（eKYC）はNotionだけではできないため、結局は別のツールとの併用が必要になります。ツールが増えるほど、データの二重入力や連携の手間が生まれます。</p>
+            <p>もし「Notion + 七福神 + SATO」の3つを使い分ける運用に現場が慣れているなら今はそれでOK。ただ、2店舗目・3店舗目に展開するとき、その運用を新しいスタッフに教えるコストは考えておく価値があります。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「自社開発って、開発費が高くつくのでは？」</summary>
+          <div class="faq-answer">
+            <p>従来の受託開発なら、この規模のシステムで500万〜1,000万円はかかります。</p>
+            <p>しかし、AIコーディング（Claude Code等）を使えば、<strong>1人のエンジニアが数日でプロトタイプを作れる時代</strong>になっています。実際にこのプロトタイプは、AIと人間の協業で作られています。</p>
+            <p>ランニングコストも、Firebase無料枠なら月額¥0。Notionの¥1,650/人×20名＝月額¥33,000と比べても、年間で約40万円の差が出ます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「作った人がいなくなったら、誰がメンテナンスするの？」</summary>
+          <div class="faq-answer">
+            <p>これが一番多い懸念で、もっともな質問です。</p>
+            <p>答えは2つあります。まず、<strong>コード自体がAIで生成されているため、AIにメンテナンスも任せられます</strong>。「この画面にフィルターを追加して」「このレポートを月次で出して」といった要望を、AIに日本語で伝えるだけで対応できます。</p>
+            <p>次に、コードはGitHubに残り、SERVICE_SPEC.md（仕様書）も整備されています。仮に別のエンジニアが引き継いでも、仕様を読んでAIに指示すれば改修可能です。パッケージ製品のベンダーロックインより、実はリスクが低いと考えています。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「七福神をやめて大丈夫？ 長年使ってきた実績があるのに」</summary>
+          <div class="faq-answer">
+            <p>七福神は呉服店向けに長年磨かれた良いソフトです。いきなり全部置き換える必要はありません。</p>
+            <p>おすすめは<strong>並行運用から始めること</strong>です。まず入荷〜査定の工程（七福神がカバーしていない領域）をこのアプリで管理し、効果を検証する。現場が慣れてきたら、販売・在庫管理も段階的に移行する。</p>
+            <p>七福神にしかないデータがあれば、CSVエクスポート→インポートで移行できます。「いきなり切り替え」ではなく「じわじわ置き換え」が現実的なアプローチです。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「うちのスタッフはITに詳しくない。使いこなせる？」</summary>
+          <div class="faq-answer">
+            <p>現在、スタッフは「七福神で商品登録 → SATO V5でタグ印刷 → 別のシステムで売上管理」と、3つのソフトを使い分けています。</p>
+            <p>このアプリなら<strong>ブラウザを1つ開くだけ</strong>。スマホやタブレットでも動きます。QRコードをスキャンすれば商品が自動で入る。実は、3つのソフトを覚えるより簡単です。</p>
+            <p>また、UIは日本語で、買取は「顧客選択→査定→確認→完了」のステップ式ガイドになっているので、手順に迷いません。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「セキュリティは大丈夫？ 顧客情報を扱うのに」</summary>
+          <div class="faq-answer">
+            <p>データはGoogleのFirebase（Firestore）に保存されます。Googleのセキュリティ基盤の上に乗っているため、自社サーバーを立てるよりも堅牢です。</p>
+            <p>アクセス制御は Firebase Auth（メール/パスワード認証）で保護。Firestoreのセキュリティルールにより、認証済みユーザーのみがデータにアクセスできます。</p>
+            <p>古物営業法で求められる本人確認記録の保存（3年間）にも、Firestoreのデータ保持で対応可能です。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「これ、うちの会社でも使える？ 着物以外でも」</summary>
+          <div class="faq-answer">
+            <p><strong>使えます。</strong>このシステムの本質は「買取→在庫管理→販売」のフローを一気通貫で管理すること。着物に限らず、ブランド品、古着、骨董品、中古家電など、古物商全般に応用可能です。</p>
+            <p>カテゴリやコンディションの選択肢を変えるだけで、別業種に展開できます。実際、そうした横展開（RaaS: Retail as a Service）も構想の一部です。</p>
+            <p>「自社の業務フローに合わせてAIにカスタマイズを指示する」—— これが、パッケージ製品では絶対にできない、自社システムの最大の強みです。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「結局、何から始めればいいの？」</summary>
+          <div class="faq-answer">
+            <p>3ステップで考えてください:</p>
+            <ol>
+              <li><strong>まず見てみる</strong> — 今日このデモを触ってみてください。買取の流れ、QRスキャン販売、ダッシュボードを体験する</li>
+              <li><strong>1つだけ試す</strong> — いきなり全部ではなく、「入荷登録だけ」「棚卸しだけ」など1工程をこのアプリで試す。現場の反応を見る</li>
+              <li><strong>効果が出たら広げる</strong> — 現場が「これは楽」と感じたら、買取→販売→顧客管理と段階的に移行する</li>
+            </ol>
+            <p>大事なのは「全部一気に変える」ではなく「小さく試して、効果を確認してから広げる」こと。リスクゼロで始められます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「データが飛んだらどうするの？ バックアップは？」</summary>
+          <div class="faq-answer">
+            <p>FirestoreはGoogleのクラウド上で自動的に冗長化されています。データセンター障害が起きても、別のリージョンにコピーが残ります。</p>
+            <p>加えて、定期的なエクスポート（CSV/JSON）を自動化することも可能です。万が一Firebaseを離れたくなった場合でも、全データを手元に持ち出せます。</p>
+            <p>ちなみに、七福神のデータはローカルPCに保存されていることが多く、そのPCが壊れたら復旧できないリスクがあります。クラウドの方がむしろ安全です。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「ネットが切れたら仕事が止まるのでは？」</summary>
+          <div class="faq-answer">
+            <p>Firestoreにはオフラインキャッシュ機能があり、一時的にネットが切れてもアプリは動き続けます。接続が復旧した時点で自動的にデータが同期されます。</p>
+            <p>とはいえ、現代の店舗でWi-Fiが完全に使えない状況は稀です。スマホのテザリングでもバックアップできます。七福神もPC上で動いている以上、PCが壊れたら同じく止まりますので、リスクは同程度かそれ以下です。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「古物台帳の法的要件は満たせるの？」</summary>
+          <div class="faq-answer">
+            <p>古物営業法では、買取時に「品目・数量・特徴・相手方の氏名住所・確認方法・取引年月日」の記録が義務付けられています（3年保存）。</p>
+            <p>このプロトタイプでは、買取トランザクションに全項目を記録し、顧客の本人確認情報（身分証種類・確認日時）も保存しています。Firestoreのデータは削除しない限り永続的に残るため、<strong>3年保存要件は自動的に満たされます</strong>。</p>
+            <p>さらにeKYCを導入すれば、身分証の画像データも電子的に保管でき、紙の台帳管理から解放されます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「うちはスマレジを使ってるんだけど、連携できる？」</summary>
+          <div class="faq-answer">
+            <p>スマレジにはAPIが公開されており、技術的には連携可能です。売上データの自動同期、商品マスタの共有などが実現できます。</p>
+            <p>ただし、このプロトタイプ自体にPOS機能（QRスキャン→カート→決済→レシート）が組み込まれているので、<strong>スマレジを使わずにこのアプリだけで完結することも可能</strong>です。</p>
+            <p>既にスマレジの契約がある場合は連携、なければこのアプリ単体で —— どちらにも対応できる柔軟性があります。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「ECサイト（ヤフオク・メルカリ等）との連携は？」</summary>
+          <div class="faq-answer">
+            <p>現時点では手動出品ですが、各プラットフォームのAPIを使った自動出品は技術的に実装可能です。</p>
+            <p>具体的には、商品データ（写真・品名・価格・サイズ）がすでにFirestoreにあるので、ボタン1つで複数のECサイトに同時出品する機能を追加できます。在庫ステータスと連動させれば、<strong>店頭で売れた瞬間にECの出品を自動取り下げ</strong>することも可能です。</p>
+            <p>これはパッケージ製品では絶対にできないカスタマイズの好例です。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「棚卸しって本当に楽になる？ 今は手作業で丸1日かかる」</summary>
+          <div class="faq-answer">
+            <p>このアプリの棚卸し機能は「セッション型」です。棚卸しセッションを開始し、商品のQRコードをスマホでスキャンしていくだけ。</p>
+            <p>スキャンが終わると、<strong>「システム上は在庫なのにスキャンされなかった商品」が自動で一覧表示</strong>されます。つまり、紛失・盗難の検出が即座にできます。</p>
+            <p>手書きチェックリストとの突合作業がゼロになるので、丸1日の作業が数時間に短縮できる見込みです。複数人で同時にスキャンすることも可能です。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「SATOのプリンターはもう使えなくなるの？」</summary>
+          <div class="faq-answer">
+            <p>SATO STS300をそのまま使い続けることも可能です。ブラウザから印刷する場合、SATOに限らず既存のラベルプリンターに対応できます。</p>
+            <p>ただし、もっと安価な選択肢もあります。BrotherのQL-800シリーズ（約1万円）でも十分なクオリティのバーコードラベルが印刷できます。七福神+SATO V5のTXTファイル連携という複雑な仕組みが不要になるため、<strong>プリンターの選択肢が広がる</strong>というのもメリットです。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「AI値付けって本当にできるの？ 着物の価値は経験がないとわからない」</summary>
+          <div class="faq-answer">
+            <p>おっしゃる通り、着物の鑑定は奥が深く、AIがベテランの目を完全に代替するのは難しいです。</p>
+            <p>ただし、<strong>「過去の売上データに基づく参考価格の提示」は今すぐできます</strong>。例えば「大島紬・状態A・裄丈68の商品は、過去の平均販売価格が¥48,000」という情報を査定時に表示する。最終判断は人間がするが、根拠となるデータをAIが出す —— これだけでも新人スタッフの査定品質が格段に上がります。</p>
+            <p>将来的には、着物の画像から産地・技法を推定するAI鑑定データベースの構築も視野に入れています。これは世界初の試みになりえます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「2店舗目を出すとき、このシステムはどうなる？」</summary>
+          <div class="faq-answer">
+            <p>Firebaseのプロジェクトを共有するだけで、<strong>追加費用ゼロで2店舗目を接続</strong>できます。</p>
+            <p>在庫データが1つのデータベースにあるので、「本店にある着物を佐鳴台店から確認・移動する」といった店舗間連携も自然にできます。Notionでも可能ですが、POS・バーコードまで含めた一気通貫の2店舗管理は、このアプリならではです。</p>
+            <p>七福神で同じことをやろうとすると、追加ライセンスとネットワーク設定が必要になります。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「導入にどれくらいの期間がかかる？」</summary>
+          <div class="faq-answer">
+            <p>プロトタイプはすでに動いている状態です。本番環境への移行は以下のステップで進められます:</p>
+            <ol>
+              <li><strong>1週目</strong>: Firebaseプロジェクト作成、初期データ投入、スタッフアカウント作成</li>
+              <li><strong>2〜3週目</strong>: 1工程（入荷登録 or 棚卸し）で試験運用</li>
+              <li><strong>4週目〜</strong>: フィードバックを反映しながら工程を順次拡大</li>
+            </ol>
+            <p>大規模なシステム移行のような「半年かけてカットオーバー」は不要です。<strong>来週から1工程だけ始める</strong>ことができます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「Googleに依存するのが怖い。サービス終了したらどうなる？」</summary>
+          <div class="faq-answer">
+            <p>Firebaseは2011年から続くGoogleの主力サービスで、世界中の数百万のアプリが利用しています。突然の終了リスクは極めて低いです。</p>
+            <p>仮にFirebaseが終了する場合でも、データはJSON/CSVでエクスポート可能です。フロントエンド（React/Next.js）のコードはそのまま残るので、<strong>データベースだけを別のサービス（Supabase, PlanetScale等）に差し替えればOK</strong>。全部作り直しにはなりません。</p>
+            <p>むしろ、京都ナイスウェアという1社に依存する七福神の方が、ベンダー消滅リスクは高いとも言えます。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「補助金は使える？ IT導入補助金とか」</summary>
+          <div class="faq-answer">
+            <p><strong>IT導入補助金（デジタル化基盤導入枠）</strong>の対象になりえます。会計・受発注・決済・ECに関するITツール導入が対象で、このシステムは在庫管理・POS・受発注を含むため要件を満たす可能性があります。</p>
+            <p>ただし、IT導入補助金は「IT導入支援事業者」として登録されたベンダー経由での申請が必要です。AppTalentHubがIT導入支援事業者として登録するか、登録済みのパートナーと組むことで申請可能になります。</p>
+            <p>また、<strong>小規模事業者持続化補助金</strong>（販路開拓目的）でも、EC連携やDXツール導入として申請できる場合があります。</p>
+          </div>
+        </details>
+
+        <details class="faq">
+          <summary>「事業を売却するとき、このシステムはどう評価される？」</summary>
+          <div class="faq-answer">
+            <p>M&Aの現場では、<strong>「独自のDXシステムを持っている事業」は高く評価</strong>されます。属人的なノウハウではなく、仕組みとして業務が回る状態は、買い手にとって大きな安心材料です。</p>
+            <p>コードはGitHubに、仕様はSERVICE_SPEC.mdに、運用マニュアルはドキュメントに。すべてデジタルで引き継ぎ可能です。袴田さんがルーベラ→忠右衛門で経験されたように、PMI（統合作業）の大変さは身をもってご存知かと思います。このシステムがあれば、次の承継者の負担は大幅に軽減されます。</p>
+          </div>
+        </details>
+
+      </div>
+    </div>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    AppTalentHub株式会社 — 忠右衛門 DX支援資料 / 2026-04-12 打ち合わせ用
+  </div>
+
+</body>
+</html>

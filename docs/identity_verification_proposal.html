@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>宅配買取における本人確認システム導入のご提案</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Noto Sans JP', 'Hiragino Sans', 'Yu Gothic', sans-serif;
+      color: #1e293b;
+      line-height: 1.8;
+      background: #f8fafc;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #538bb0 0%, #3d6f94 100%);
+      color: #fff;
+      padding: 60px 24px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+    .header .badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 20px;
+      padding: 4px 16px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Section */
+    .section {
+      padding: 48px 0;
+    }
+    .section + .section {
+      border-top: 1px solid #e2e8f0;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #538bb0;
+      margin-bottom: 24px;
+      padding-left: 16px;
+      border-left: 4px solid #538bb0;
+    }
+
+    /* Alert box */
+    .alert {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 32px;
+    }
+    .alert-title {
+      color: #dc2626;
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 8px;
+    }
+    .alert p {
+      color: #7f1d1d;
+      font-size: 0.95rem;
+    }
+
+    /* Info box */
+    .info-box {
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 8px;
+      padding: 20px 24px;
+      margin-bottom: 24px;
+    }
+    .info-box-title {
+      color: #1d4ed8;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    /* Comparison table */
+    .comparison {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 32px;
+      margin-bottom: 32px;
+    }
+    .comparison h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .comparison p.desc {
+      color: #64748b;
+      font-size: 0.9rem;
+      margin-bottom: 16px;
+    }
+
+    /* Table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.95rem;
+    }
+    thead th {
+      background: #538bb0;
+      color: #fff;
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+    }
+    thead th:first-child { border-radius: 8px 0 0 0; }
+    thead th:last-child { border-radius: 0 8px 0 0; }
+    tbody td {
+      padding: 12px 16px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    tbody tr:hover { background: #f1f5f9; }
+
+    /* Phase cards */
+    .phase-grid {
+      display: grid;
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+    .phase-card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+      padding: 32px;
+      border-top: 4px solid #538bb0;
+    }
+    .phase-card.recommended {
+      border-top-color: #22c55e;
+      box-shadow: 0 2px 8px rgba(34,197,94,0.15);
+    }
+    .phase-card .phase-label {
+      display: inline-block;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 2px 10px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .phase-card.recommended .phase-label {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .phase-card .phase-label.phase1 {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+    .phase-card .phase-label.phase2 {
+      background: #fef3c7;
+      color: #92400e;
+    }
+    .phase-card .phase-label.common {
+      background: #f3e8ff;
+      color: #6b21a8;
+    }
+    .phase-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .phase-card .method-ref {
+      color: #64748b;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+    }
+
+    /* Flow */
+    .flow {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin: 20px 0;
+    }
+    .flow-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .flow-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 36px;
+    }
+    .flow-dot {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #538bb0;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.85rem;
+      flex-shrink: 0;
+    }
+    .flow-connector {
+      width: 2px;
+      height: 32px;
+      background: #cbd5e1;
+    }
+    .flow-content {
+      padding: 6px 0 24px 0;
+    }
+    .flow-content strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .flow-content span {
+      font-size: 0.85rem;
+      color: #64748b;
+    }
+
+    /* Metrics */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+    .metric {
+      text-align: center;
+      padding: 16px;
+      background: #f8fafc;
+      border-radius: 8px;
+    }
+    .metric .value {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #538bb0;
+    }
+    .metric .label {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-top: 4px;
+    }
+
+    /* eKYC section */
+    .ekyc-table-wrap {
+      overflow-x: auto;
+      margin: 20px 0;
+    }
+
+    /* CTA */
+    .cta-section {
+      background: linear-gradient(135deg, #538bb0 0%, #3d6f94 100%);
+      color: #fff;
+      padding: 48px 24px;
+      text-align: center;
+      border-radius: 12px;
+      margin: 32px 0;
+    }
+    .cta-section h2 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .cta-section p {
+      opacity: 0.9;
+      margin-bottom: 8px;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 32px 24px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+    .footer a {
+      color: #538bb0;
+      text-decoration: none;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header h1 { font-size: 1.5rem; }
+      .metrics { grid-template-columns: 1fr; }
+      .phase-card { padding: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header">
+    <div class="badge">古物商 / 古着買取店向け</div>
+    <h1>宅配買取における<br>本人確認システム導入のご提案</h1>
+    <p>古物営業法に準拠した、段階的な本人確認フローの構築</p>
+  </header>
+
+  <div class="container">
+
+    <!-- 1. 法的要件 -->
+    <section class="section">
+      <h2 class="section-title">なぜ本人確認が必要か</h2>
+
+      <div class="alert">
+        <div class="alert-title">古物営業法による義務</div>
+        <p>古物商が買取を行う際、相手方の本人確認は法律で義務付けられています。<br>
+          違反した場合: <strong>6月以下の懲役 または 30万円以下の罰金</strong><br>
+          根拠: 古物営業法 第15条第1項第3号 / 施行規則 第15条第3項</p>
+      </div>
+
+      <div class="info-box">
+        <div class="info-box-title">対面（店頭）と非対面（宅配）で方法が異なります</div>
+        <p><strong>店頭買取</strong>: 免許証等の目視確認 + 台帳記録でOK<br>
+          <strong>宅配買取</strong>: 非対面のため、より厳格な確認手続きが必要（警視庁が定める15の方法のいずれか）</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>取引形態</th>
+            <th>確認方法</th>
+            <th>eKYC</th>
+            <th>コスト</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>店頭買取</strong>（対面）</td>
+            <td>身分証の目視確認 + 台帳記録</td>
+            <td>不要</td>
+            <td>なし</td>
+          </tr>
+          <tr>
+            <td><strong>宅配買取</strong>（非対面）</td>
+            <td>身分証コピー + 転送不要郵便 等</td>
+            <td>任意（段階的に導入推奨）</td>
+            <td>郵送代 〜 月額費用</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 2. 段階的プラン -->
+    <section class="section">
+      <h2 class="section-title">段階的導入プラン（推奨）</h2>
+
+      <p style="color:#64748b; margin-bottom:32px;">
+        宅配買取の規模に合わせて、3つのフェーズで段階的に本人確認を強化していく方法をご提案します。
+      </p>
+
+      <div class="phase-grid">
+
+        <!-- Phase 1 -->
+        <div class="phase-card recommended">
+          <span class="phase-label phase1">Phase 1 — まずここから</span>
+          <h3>身分証コピー + 転送不要簡易書留 + 口座振込</h3>
+          <p class="method-ref">警視庁 非対面確認方法 第9号</p>
+
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">1</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>お客様が身分証コピー + 商品を発送</strong>
+                <span>運転免許証・マイナンバーカード等のコピーを同梱</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">2</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>店舗が身分証コピーを受領・記録</strong>
+                <span>氏名・住所・生年月日をシステムに登録、コピーを保存</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">3</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>記載住所に「転送不要」簡易書留を送付</strong>
+                <span>住所の実在を確認するための重要なステップ</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">4</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>到達確認後、本人名義の口座に振込</strong>
+                <span>簡易書留の受取確認をもって本人確認完了</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="value">約500円</div>
+              <div class="label">1件あたりコスト（郵送代）</div>
+            </div>
+            <div class="metric">
+              <div class="value">3〜7日</div>
+              <div class="label">確認完了までの日数</div>
+            </div>
+            <div class="metric">
+              <div class="value">0円</div>
+              <div class="label">システム導入費</div>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <div class="info-box-title">こんな場合におすすめ</div>
+            <p>宅配買取を始めたばかり / 月の宅配買取が数件〜十数件程度</p>
+          </div>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase-card">
+          <span class="phase-label phase2">Phase 2 — 件数増加時</span>
+          <h3>eKYC（顔写真 + 身分証画像によるオンライン本人確認）</h3>
+          <p class="method-ref">警視庁 非対面確認方法 第14号</p>
+
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">1</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>お客様がスマホで顔写真を撮影</strong>
+                <span>専用画面から複数角度で撮影（なりすまし防止）</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">2</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>身分証（表・裏・厚み）を撮影</strong>
+                <span>運転免許証・マイナンバーカード・在留カードに対応</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">3</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>AIが自動で本人マッチング + 真贋判定</strong>
+                <span>顔と身分証の写真を照合、有効期限等もチェック</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">4</div></div>
+              <div class="flow-content">
+                <strong>確認完了 → 口座に振込</strong>
+                <span>郵送不要で即時完了</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="metrics">
+            <div class="metric">
+              <div class="value">月額18,000円〜</div>
+              <div class="label">基本料金 + 従量課金</div>
+            </div>
+            <div class="metric">
+              <div class="value">即時</div>
+              <div class="label">確認完了までの時間</div>
+            </div>
+            <div class="metric">
+              <div class="value">郵送不要</div>
+              <div class="label">簡易書留の手間を削減</div>
+            </div>
+          </div>
+
+          <h4 style="font-size:0.95rem; margin-bottom:12px;">eKYCサービス候補</h4>
+          <div class="ekyc-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>サービス名</th>
+                  <th>提供元</th>
+                  <th>導入方式</th>
+                  <th>API公開</th>
+                  <th>備考</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>GMO顔認証eKYC</strong></td>
+                  <td>GMOグローバルサイン</td>
+                  <td>REST API連携</td>
+                  <td>非公開</td>
+                  <td>API仕様書は契約後に提供</td>
+                </tr>
+                <tr>
+                  <td><strong>ProTech ID Checker</strong></td>
+                  <td>ショーケース</td>
+                  <td>タグ設置（ノーコード）</td>
+                  <td>非公開</td>
+                  <td>開発不要、最短1週間で導入可</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert" style="margin-top:20px;">
+            <div class="alert-title">テスト導入に必要なもの</div>
+            <p>いずれのサービスもAPIドキュメントは一般公開されていません。<br>
+              事前検証を行うには、サービス提供元に問い合わせて以下を入手する必要があります:</p>
+            <ul style="margin-top:8px; padding-left:20px; color:#7f1d1d;">
+              <li><strong>API接続URL</strong>（エンドポイント / サンドボックス環境）</li>
+              <li><strong>テスト用ID / パスワード</strong>（APIキー）</li>
+              <li><strong>API仕様書</strong></li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Common: Method 10 -->
+        <div class="phase-card">
+          <span class="phase-label common">共通 — リピーター対応</span>
+          <h3>ID/パスワード認証（2回目以降の本人確認を省略）</h3>
+          <p class="method-ref">警視庁 非対面確認方法 第10号</p>
+
+          <div class="flow">
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">初</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>初回: Phase 1 または Phase 2 で本人確認を実施</strong>
+                <span>法的要件を満たす方法で1回目の確認を完了</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">登</div><div class="flow-connector"></div></div>
+              <div class="flow-content">
+                <strong>システムが「確認済み」フラグ + ログインID/PWを発行</strong>
+                <span>顧客アカウントとして登録</span>
+              </div>
+            </div>
+            <div class="flow-step">
+              <div class="flow-line"><div class="flow-dot">次</div></div>
+              <div class="flow-content">
+                <strong>2回目以降: ID/PW入力のみで買取受付可能</strong>
+                <span>本人確認の再実施は不要（古物営業法で認められた方法）</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-box">
+            <div class="info-box-title">リピーター比率が高いほど効果大</div>
+            <p>常連客が多い古着店では、初回のみ確認すれば2回目以降はスムーズに宅配買取が進みます。顧客体験の向上とオペレーション削減の両方に効果があります。</p>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 3. 導入判断の目安 -->
+    <section class="section">
+      <h2 class="section-title">導入判断の目安</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>宅配買取の月間件数</th>
+            <th>推奨フェーズ</th>
+            <th>理由</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>〜20件 / 月</td>
+            <td><strong>Phase 1</strong>（身分証コピー + 簡易書留）</td>
+            <td>低コストで十分対応可能。郵送の手間も許容範囲内</td>
+          </tr>
+          <tr>
+            <td>20〜100件 / 月</td>
+            <td><strong>Phase 1 + 方法10</strong>（リピーター対応追加）</td>
+            <td>リピーターのID/PW管理で郵送回数を削減</td>
+          </tr>
+          <tr>
+            <td>100件〜 / 月</td>
+            <td><strong>Phase 2</strong>（eKYC導入）</td>
+            <td>郵送オペレーションが限界。即時完了で顧客体験も向上</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- CTA -->
+    <div class="cta-section">
+      <h2>まずは Phase 1 から始めましょう</h2>
+      <p>宅配買取フロー（身分証アップロード・簡易書留ステータス管理・口座情報登録）は<br>既存の在庫管理システムへの機能追加で対応可能です。</p>
+      <p style="margin-top:16px; font-size:0.9rem; opacity:0.8;">
+        eKYCの導入検証をご希望の場合は、サービス提供元にテスト用の<br>
+        <strong>API接続URL・ID・パスワード・仕様書</strong>のご提供をご依頼ください。
+      </p>
+    </div>
+
+    <!-- 参照 -->
+    <section class="section">
+      <h2 class="section-title">参照情報</h2>
+      <ul style="padding-left: 20px; color: #64748b;">
+        <li><a href="https://www.keishicho.metro.tokyo.lg.jp/tetsuzuki/kobutsu/kaisetsu/hitaimen.html" target="_blank" style="color:#538bb0;">非対面取引における確認の方法 — 警視庁</a></li>
+        <li><a href="https://laws.e-gov.go.jp/law/324AC0000000108" target="_blank" style="color:#538bb0;">古物営業法</a></li>
+        <li><a href="https://jp.globalsign.com/ekyc/" target="_blank" style="color:#538bb0;">GMO顔認証eKYC — GMOグローバルサイン</a></li>
+        <li><a href="https://ekyc.showcase-tv.com/" target="_blank" style="color:#538bb0;">ProTech ID Checker — ショーケース</a></li>
+      </ul>
+    </section>
+
+  </div>
+
+  <footer class="footer">
+    <p>AppTalentHub株式会社 — 2026年4月</p>
+  </footer>
+
+</body>
+</html>
