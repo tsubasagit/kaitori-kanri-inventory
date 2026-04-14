@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
   trailingSlash: true,
   basePath: isGhPages ? "/kaitori-kanri-inventory" : "",
   assetPrefix: isGhPages ? "/kaitori-kanri-inventory/" : "",
+  experimental: {
+    workerThreads: false,
+    cpus: 2,
+  },
 };
 
 export default nextConfig;
